@@ -7,12 +7,16 @@ import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.utils.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationCli {
+
+    @Autowired
+    private ReservationService reservationService;
     public void createReservation(){
         long id_client = IOUtils.readInt("Entrez l'ID client :");
         long id_vehicle = IOUtils.readInt("Entrez l'ID vehicule :");
@@ -20,7 +24,7 @@ public class ReservationCli {
         LocalDate fin = IOUtils.readDate("Entrez la date de fin :", true);
 
         try {
-            ReservationService.getInstance().create(new Reservation(id_client, id_vehicle, debut, fin));
+            reservationService.create(new Reservation(id_client, id_vehicle, debut, fin));
         } catch (ServiceException e) {
             e.getMessage();
         } catch (DaoException e) {
@@ -30,13 +34,13 @@ public class ReservationCli {
 
     public void deleteReservation(){
         long id_res = IOUtils.readInt("Entrez l'ID reservation :");
-        ReservationService.getInstance().delete(id_res);
+        reservationService.delete(id_res);
     }
 
     public void findAll(){
         List<Reservation> list = new ArrayList<>();
         try {
-            list = ReservationService.getInstance().findAll();
+            list = reservationService.findAll();
         } catch (ServiceException e) {
             e.getMessage();
         }

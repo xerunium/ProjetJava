@@ -1,4 +1,5 @@
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\service\VehicleService.java
+C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\configuration\WebConfiguration.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\VehicleListServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\model\Client.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\dao\VehicleDao.java
@@ -10,11 +11,13 @@ C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\VehicleCreateServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\service\ClientService.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\model\Vehicle.java
+C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\configuration\AppConfiguration.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\service\ReservationService.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\persistence\ConnectionManager.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\exception\DaoException.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\exception\ServiceException.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\cli\ClientCli.java
+C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\utils\CommandLine.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\HomeServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\utils\IOUtils.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\cli\VehicleCli.java

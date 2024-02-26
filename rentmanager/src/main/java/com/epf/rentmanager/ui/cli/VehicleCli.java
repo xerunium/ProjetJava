@@ -7,19 +7,23 @@ import com.epf.rentmanager.model.Vehicle;
 import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.utils.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VehicleCli {
+
+    @Autowired
+    private VehicleService vehicleService;
     public void createVehicle(){
         String constructeur = IOUtils.readString("Entrez le constructeur :", true);
         String modele = IOUtils.readString("Entrez le modele :", true);
         int nb = IOUtils.readInt("Entrez le nombre de place :");
 
         try {
-            VehicleService.getInstance().create(new Vehicle(constructeur, modele, nb));
+            vehicleService.create(new Vehicle(constructeur, modele, nb));
         } catch (ServiceException e) {
             e.getMessage();
         } catch (DaoException e) {
@@ -30,7 +34,7 @@ public class VehicleCli {
     public void findAll(){
         List<Vehicle> list = new ArrayList<>();
         try {
-            list = VehicleService.getInstance().findAll();
+            list =vehicleService.findAll();
         } catch (ServiceException e) {
             e.getMessage();
         }
