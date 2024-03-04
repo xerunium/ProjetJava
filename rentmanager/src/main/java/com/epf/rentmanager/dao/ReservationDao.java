@@ -24,7 +24,7 @@ public class ReservationDao {
 	private static final String FIND_RESERVATIONS_BY_CLIENT_QUERY = "SELECT id, vehicle_id, debut, fin FROM Reservation WHERE client_id=?;";
 	private static final String FIND_RESERVATIONS_BY_VEHICLE_QUERY = "SELECT id, client_id, debut, fin FROM Reservation WHERE vehicle_id=?;";
 	private static final String FIND_RESERVATIONS_QUERY = "SELECT id, client_id, vehicle_id, debut, fin FROM Reservation;";
-	private static final String FIND_RESERVATIONS_BY_ID = "SELECT id, vehicle_id, debut, fin FROM Reservation WHERE id=?;";
+	private static final String FIND_RESERVATIONS_BY_ID = "SELECT client_id, vehicle_id, debut, fin FROM Reservation WHERE id=?;";
 	private static final String COUNT_QUERY = "SELECT COUNT(*) AS count FROM Reservation;";
 	private static final String COUNT_CLIENT_ID = "SELECT COUNT(*) AS count FROM Reservation WHERE client_id = ?";
 
@@ -45,7 +45,7 @@ public class ReservationDao {
 			conn.close();
 			return id;
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 	}
 	
@@ -60,7 +60,7 @@ public class ReservationDao {
 			conn.close();
 			return id;
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 	}
 
@@ -78,7 +78,7 @@ public class ReservationDao {
 			pstmt.close();
 			conn.close();
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return list;
 	}
@@ -96,7 +96,7 @@ public class ReservationDao {
 			pstmt.close();
 			conn.close();
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return list;
 	}
@@ -113,24 +113,26 @@ public class ReservationDao {
 			pstmt.close();
 			conn.close();
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return list;
 	}
 
 	public Reservation findByID(long id) throws DaoException{
-		try {
+		try (
 			Connection conn = ConnectionManager.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(FIND_RESERVATIONS_BY_ID);
-			pstmt.setLong(1, id);
+			PreparedStatement pstmt = conn.prepareStatement(FIND_RESERVATIONS_BY_ID);)
+		{
+			pstmt.setInt(1,(int) id);
 			ResultSet rset = pstmt.executeQuery();
-			Reservation res = new Reservation(rset.getLong(1), rset.getLong(2), rset.getLong(3), rset.getDate(4).toLocalDate(), rset.getDate(5).toLocalDate());
-			pstmt.close();
-			conn.close();
-			return res;
+			if(rset.next()) {
+				Reservation res = new Reservation(id, rset.getLong(1), rset.getLong(2), rset.getDate(3).toLocalDate(), rset.getDate(4).toLocalDate());
+				return res;
+			}
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
+		return null;
 	}
 
 	public int count() throws DaoException {
@@ -144,7 +146,7 @@ public class ReservationDao {
 				nb = rset.getInt("count");
 			}
 		}catch(SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return nb;
 	}
@@ -163,7 +165,7 @@ public class ReservationDao {
 			pstmt.close();
 			conn.close();
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return count;
 	}

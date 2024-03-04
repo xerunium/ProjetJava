@@ -5,6 +5,7 @@ import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.model.Vehicle;
 import com.epf.rentmanager.service.ClientService;
+import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/users/create")
-public class UserCreateServlet extends HttpServlet{
+
+@WebServlet("/vehicles/delete")
+public class VehicleDeleteServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     @Autowired
-    private ClientService clientService;
+    private VehicleService vehicleService;
+    @Autowired
+    private ReservationService reservationService;
 
     @Override
     public void init() throws ServletException {
@@ -33,23 +37,24 @@ public class UserCreateServlet extends HttpServlet{
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/users/create.jsp").forward(request, response);
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String nom = req.getParameter("last_name");
-            String prenom = req.getParameter("first_name");
-            String email = req.getParameter("email");
-            LocalDate naissance = LocalDate.parse(req.getParameter("naissance"));
-            clientService.create(new Client(nom, prenom, email, naissance));
+            long vehicle_id = Long.parseLong(request.getParameter("id"));
+            System.out.println(vehicle_id);
+            Vehicle vehicle = vehicleService.findById(vehicle_id);
+            System.out.println(vehicle);
+            request.setAttribute("vehicle", vehicle);
+            System.out.println("ok");
+            long ok = vehicleService.delete(vehicle);
+            System.out.println(ok);
         } catch (ServiceException e) {
             e.getMessage();
         } catch (DaoException e) {
-            throw new RuntimeException(e);
+            e.getMessage();
         }
+        this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/delete.jsp").forward(request, response);
+
     }
+
 }

@@ -35,6 +35,18 @@ public class ClientService {
 		return client.getID();
 	}
 
+	public long delete(Client client) throws ServiceException, DaoException{
+		long id_client = 0;
+		try {
+			id_client = clientDao.delete(client);
+			System.out.println("rentré dans service");
+		}
+		catch(DaoException e){
+			throw new ServiceException();
+		}
+		return id_client;
+	}
+
 	public Client findById(long id) throws ServiceException {
 		try{
 			Client client = clientDao.findById(id);

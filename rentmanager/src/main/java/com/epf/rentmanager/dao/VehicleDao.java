@@ -14,28 +14,30 @@ public class VehicleDao {
 
 	private VehicleDao() {}
 	
-	private static final String CREATE_VEHICLE_QUERY = "INSERT INTO vehicle(constructeur, modele, nb_places) VALUES(?, ?);";
-	private static final String DELETE_VEHICLE_QUERY = "DELETE FROM vehicle WHERE id=?;";
-	private static final String FIND_VEHICLE_BY_ID_QUERY = "SELECT id, constructeur, modele, nb_places FROM vehicle WHERE id=?;";
+	private static final String CREATE_VEHICLE_QUERY = "INSERT INTO Vehicle(constructeur, modele, nb_places) VALUES(?, ?, ?);";
+	private static final String DELETE_VEHICLE_QUERY = "DELETE FROM Vehicle WHERE id=?;";
+	private static final String FIND_VEHICLE_BY_ID_QUERY = "SELECT constructeur, modele, nb_places FROM Vehicle WHERE id=?;";
 	private static final String FIND_VEHICLES_QUERY = "SELECT id, constructeur, modele, nb_places FROM Vehicle;";
-	private static final String COUNT_QUERY = "SELECT COUNT(*) AS count FROM vehicle;";
+	private static final String COUNT_QUERY = "SELECT COUNT(*) AS count FROM Vehicle;";
 
 
 	public long create(Vehicle vehicle) throws DaoException {
 		long id = vehicle.getId();
 		String constructeur = vehicle.getConstructeur();
+		String modele = vehicle.getModele();
 		int nb = vehicle.getNb_places();
 		try {
 			Connection conn = ConnectionManager.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(CREATE_VEHICLE_QUERY);
 			pstmt.setString(1, constructeur);
-			pstmt.setInt(2, nb);
+			pstmt.setString(2, modele);
+			pstmt.setInt(3, nb);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
 			return id;
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 	}
 
@@ -44,33 +46,38 @@ public class VehicleDao {
 		try {
 			Connection conn = ConnectionManager.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(DELETE_VEHICLE_QUERY);
-			pstmt.setLong(1, id);
+			pstmt.setInt(1, (int) id);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
 			return id;
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 	}
 
 	public Vehicle findById(long id) throws DaoException {
 		String constructeur, modele;
 		int nb;
-		try {
+		try (
 			Connection conn = ConnectionManager.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(FIND_VEHICLE_BY_ID_QUERY);
-			pstmt.setLong(1, id);
+			PreparedStatement pstmt = conn.prepareStatement(FIND_VEHICLE_BY_ID_QUERY);)
+		{
+			pstmt.setInt(1,(int) id);
+			System.out.println("setInt");
 			ResultSet rset = pstmt.executeQuery();
-			constructeur = rset.getString(1);
-			modele = rset.getString(2);
-			nb = rset.getInt(3);
-			pstmt.close();
-			conn.close();
+			if(rset.next()) {
+				System.out.println("rset.next");
+				constructeur = rset.getString(1);
+				modele = rset.getString(2);
+				nb = rset.getInt(3);
+				System.out.println(constructeur);
+				return new Vehicle(id, constructeur, modele, nb);
+			}
 		}catch(SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
-		return new Vehicle(constructeur, modele, nb);
+		return null;
 	}
 
 	public List<Vehicle> findAll() throws DaoException {
@@ -102,7 +109,7 @@ public class VehicleDao {
 				nb = rset.getInt("count");
 			}
 		}catch(SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return nb;
 	}

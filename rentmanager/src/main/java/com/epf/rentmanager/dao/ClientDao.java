@@ -42,22 +42,23 @@ public class ClientDao {
 			conn.close();
 			return id;
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 	}
 	
 	public long delete(Client client) throws DaoException {
 		long id = client.getID();
-		try {
-			Connection conn = ConnectionManager.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(DELETE_CLIENT_QUERY);
-			pstmt.setLong(1, id);
-			pstmt.executeUpdate();
-			pstmt.close();
-			conn.close();
+		System.out.println("id du client DAO : " + id);
+		try (Connection conn = ConnectionManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(DELETE_CLIENT_QUERY)) {
+			System.out.println("rentré dans catch");
+			pstmt.setInt(1, (int) id);
+			System.out.println("setint");
+			pstmt.execute();
+			System.out.println("ici");
 			return id;
-		}catch (SQLException e){
-			throw new DaoException();
+		} catch (SQLException e) {
+			throw new DaoException("Probleme dans la suppression DAO");
 		}
 	}
 
@@ -77,10 +78,10 @@ public class ClientDao {
 				email = rset.getString(3);
 				naissance = rset.getDate(4).toLocalDate();
 				rset.close();
-				return new Client(nom, prenom, email, naissance);
+				return new Client(id, nom, prenom, email, naissance);
 			}
 		}catch(SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return null;
 	}
@@ -97,7 +98,7 @@ public class ClientDao {
 			pstmt.close();
 			conn.close();
 		}catch (SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return list;
 	}
@@ -113,7 +114,7 @@ public class ClientDao {
 				nb = rset.getInt("count");
 			}
 		}catch(SQLException e){
-			throw new DaoException();
+			throw new DaoException("Problème DAO");
 		}
 		return nb;
 	}

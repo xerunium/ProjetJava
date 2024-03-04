@@ -29,7 +29,7 @@ public class ReservationService {
     public long create(Reservation reservation) throws ServiceException, DaoException {
         try {
             if ((reservation.getClient_id()<1) || (reservation.getVehicule_id()<1)) {
-                throw new ServiceException();
+                throw new ServiceException("Problème DAO");
             }
             reservationDao.create(reservation);
         } catch (DaoException e) {
@@ -38,6 +38,17 @@ public class ReservationService {
         return reservation.getId();
     }
 
+    public long delete(Reservation reservation) throws ServiceException, DaoException{
+        long id_client = 0;
+        try {
+            id_client = reservationDao.delete(reservation);
+            System.out.println("rentré dans service");
+        }
+        catch(DaoException e){
+            throw new ServiceException();
+        }
+        return id_client;
+    }
 
     public List<Reservation> findByClientId(long id) throws ServiceException {
         try {
@@ -103,5 +114,21 @@ public class ReservationService {
             e.getMessage();
         }
         return -1;
+    }
+
+    public Reservation findById(long resId) throws ServiceException {
+        try{
+            Reservation reservation = reservationDao.findByID(resId);
+            System.out.println("service");
+            if(reservation!=null) {
+                System.out.println("pas null");
+                return reservation;
+            }
+            System.out.println("service ex");
+            throw new ServiceException();
+        }catch(DaoException e){
+            e.getMessage();
+        }
+        return null;
     }
 }

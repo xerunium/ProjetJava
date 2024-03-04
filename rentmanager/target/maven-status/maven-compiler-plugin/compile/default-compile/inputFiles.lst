@@ -1,3 +1,4 @@
+C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\VehicleDeleteServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\ReservationListServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\model\Client.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\UserCreateServlet.java
@@ -5,7 +6,9 @@ C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\model\Reservation.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\service\ClientService.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\configuration\AppConfiguration.java
+C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\ReservationDeleteServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\exception\DaoException.java
+C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\UserDeleteServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\servlet\ReservationCreateServlet.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\cli\VehicleCli.java
 C:\Users\guilh\OneDrive\Documents\#Cours\#EPF4A\Java\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\service\VehicleService.java
