@@ -23,7 +23,7 @@ public class ClientDao {
 	private static final String DELETE_CLIENT_QUERY = "DELETE FROM Client WHERE id=?;";
 	private static final String FIND_CLIENT_QUERY = "SELECT nom, prenom, email, naissance FROM Client WHERE id=?;";
 	private static final String FIND_CLIENTS_QUERY = "SELECT id, nom, prenom, email, naissance FROM Client;";
-	
+	private static final String COUNT_QUERY = "SELECT COUNT(*) AS count FROM Client;";
 	public long create(Client client) throws DaoException {
 		long id = client.getID();
 		String nom = client.getNom();
@@ -64,22 +64,25 @@ public class ClientDao {
 	public Client findById(long id) throws DaoException {
 		String nom, prenom, email;
 		LocalDate naissance;
-		try {
+		try (
 			Connection conn = ConnectionManager.getConnection();
-			String stmt = "SELECT nom, prenom, email, naissance FROM Client WHERE id = ?";
-			PreparedStatement pstmt = conn.prepareStatement(stmt);
-			pstmt.setLong(1, id);
+			PreparedStatement pstmt = conn.prepareStatement(FIND_CLIENT_QUERY);)
+		{
+			pstmt.setInt(1, (int) id);
 			ResultSet rset = pstmt.executeQuery();
-			nom = rset.getString(1);
-			prenom = rset.getString(2);
-			email = rset.getString(3);
-			naissance = rset.getDate(4).toLocalDate();
-			pstmt.close();
-			conn.close();
+
+			if(rset.next()) {
+				nom = rset.getString(1);
+				prenom = rset.getString(2);
+				email = rset.getString(3);
+				naissance = rset.getDate(4).toLocalDate();
+				rset.close();
+				return new Client(nom, prenom, email, naissance);
+			}
 		}catch(SQLException e){
 			throw new DaoException();
 		}
-		return new Client(nom, prenom, email, naissance);
+		return null;
 	}
 
 	public List<Client> findAll() throws DaoException {
@@ -89,7 +92,7 @@ public class ClientDao {
 			PreparedStatement pstmt = conn.prepareStatement(FIND_CLIENTS_QUERY);
 			ResultSet rset = pstmt.executeQuery();
 			while (rset.next()){
-				list.add(new Client(rset.getString(2), rset.getString(3), rset.getString(4), rset.getDate(5).toLocalDate()));
+				list.add(new Client(rset.getInt(1), rset.getString(2), rset.getString(3), rset.getString(4), rset.getDate(5).toLocalDate()));
 			}
 			pstmt.close();
 			conn.close();
@@ -97,6 +100,22 @@ public class ClientDao {
 			throw new DaoException();
 		}
 		return list;
+	}
+
+	public int count() throws DaoException {
+		int nb = 0;
+		try (
+				Connection conn = ConnectionManager.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(COUNT_QUERY);
+				ResultSet rset = pstmt.executeQuery();)
+		{
+			if (rset.next()){
+				nb = rset.getInt("count");
+			}
+		}catch(SQLException e){
+			throw new DaoException();
+		}
+		return nb;
 	}
 
 }

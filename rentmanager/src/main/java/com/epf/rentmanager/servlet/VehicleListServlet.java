@@ -34,7 +34,6 @@ public class VehicleListServlet extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             List<Vehicle> list = vehicleService.findAll();
-            System.out.println(list);
             request.setAttribute("vehicles", list);
         } catch (ServiceException e) {
             e.getMessage();

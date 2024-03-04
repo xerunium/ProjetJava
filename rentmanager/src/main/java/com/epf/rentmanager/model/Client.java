@@ -34,6 +34,14 @@ public class Client {
         nextID++;
     }
 
+    public Client(long ID, String nom, String prenom, String email, LocalDate naissance) {
+        this.ID = ID;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.naissance = naissance;
+    }
+
     public LocalDate getNaissance() {
         return naissance;
     }

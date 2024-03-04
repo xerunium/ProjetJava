@@ -31,43 +31,28 @@
                                     <th>Nom</th>
                                     <th>Prenom</th>
                                     <th>Email</th>
-                                    <th>Action</th>
+                                    <th>Naissance</th>
                                 </tr>
-                                <tr>
-                                    <td>1.</td>
-                                    <td>John</td>
-                                    <td>Doe</td>
-                                    <td>john.doe@epf.fr</td>
+
+                                <c:forEach items="${clients}" var="client">
+                                    <td>${client.ID}.</td>
+                                    <td>${client.nom}</td>
+                                    <td>${client.prenom}</td>
+                                    <td>${client.email}</td>
+                                    <td>${client.naissance}</td>
                                     <td>
-                                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/users/details?id=1">
+                                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/users/details?id=${client.ID}">
                                         <i class="fa fa-play"></i>
                                         </a>
                                         <a class="btn btn-success disabled" href="#">
-                                            <i class="fa fa-edit"></i>
+                                        <i class="fa fa-edit"></i>
                                         </a>
                                         <a class="btn btn-danger disabled" href="#">
-                                            <i class="fa fa-trash"></i>
+                                        <i class="fa fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
-
-                                <tr>
-                                    <td>2.</td>
-                                    <td>Jane</td>
-                                    <td>Doe</td>
-                                    <td>jane.doe@epf.fr</td>
-                                    <td>
-                                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/users/details?id=2">
-                                            <i class="fa fa-play"></i>
-                                        </a>
-                                        <a class="btn btn-success disabled" href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a class="btn btn-danger disabled" href="#">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                </c:forEach>
                             </table>
                         </div>
                         <!-- /.box-body -->

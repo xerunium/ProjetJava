@@ -86,4 +86,22 @@ public class ReservationService {
             e.getMessage();
         }
     }
+
+    public int count(){
+        try{
+            return reservationDao.count();
+        } catch (DaoException e) {
+            e.getMessage();
+            return 0;
+        }
+    }
+
+    public int countByClientID(long clientid){
+        try {
+            return reservationDao.countResaByClientId(clientid);
+        } catch (DaoException e) {
+            e.getMessage();
+        }
+        return -1;
+    }
 }

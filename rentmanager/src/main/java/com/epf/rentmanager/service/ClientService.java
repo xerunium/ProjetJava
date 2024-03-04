@@ -59,5 +59,13 @@ public class ClientService {
 		}
 		return null;
 	}
-	
+
+	public int count(){
+		try{
+			return clientDao.count();
+		} catch (DaoException e) {
+			e.getMessage();
+			return 0;
+		}
+	}
 }
