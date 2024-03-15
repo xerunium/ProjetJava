@@ -27,7 +27,7 @@ public class ReservationDao {
 	private static final String FIND_RESERVATIONS_BY_ID = "SELECT client_id, vehicle_id, debut, fin FROM Reservation WHERE id=?;";
 	private static final String COUNT_QUERY = "SELECT COUNT(*) AS count FROM Reservation;";
 	private static final String COUNT_CLIENT_ID = "SELECT COUNT(*) AS count FROM Reservation WHERE client_id = ?";
-
+	private static final String COUNT_UNIQUE_VEHICLE = "SELECT COUNT(DISTINCT vehicle_id) AS nombre_voitures FROM Reservation WHERE client_id = ?;";
 
 	public long create(Reservation reservation) throws DaoException {
 		long id = reservation.getId();
@@ -66,20 +66,25 @@ public class ReservationDao {
 
 	
 	public List<Reservation> findResaByClientId(long clientId) throws DaoException {
+		System.out.println("DAO");
 		ArrayList<Reservation> list = new ArrayList<>();
-		try {
+		try (
 			Connection conn = ConnectionManager.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(FIND_RESERVATIONS_BY_CLIENT_QUERY);
+			PreparedStatement pstmt = conn.prepareStatement(FIND_RESERVATIONS_BY_CLIENT_QUERY);)
+		{
 			pstmt.setLong(1, clientId);
 			ResultSet rset = pstmt.executeQuery();
+			System.out.println("execute query");
 			while (rset.next()){
-				list.add(new Reservation(rset.getLong(1), clientId, rset.getLong(3), rset.getDate(4).toLocalDate(), rset.getDate(5).toLocalDate()));
+				System.out.println("entrée while");
+				list.add(new Reservation((long) rset.getInt(1), clientId,(long) rset.getInt(2), rset.getDate(3).toLocalDate(), rset.getDate(4).toLocalDate()));
+				System.out.println("ajout");
 			}
-			pstmt.close();
-			conn.close();
 		}catch (SQLException e){
+			System.out.println("Exception DAO");
 			throw new DaoException("Problème DAO");
 		}
+		System.out.println(list);
 		return list;
 	}
 	
@@ -169,4 +174,25 @@ public class ReservationDao {
 		}
 		return count;
 	}
+
+	public int countVehicleByClientId(long clientId) throws DaoException{
+		int count = -1;
+		try {
+			Connection conn = ConnectionManager.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(COUNT_UNIQUE_VEHICLE);
+			pstmt.setInt(1, (int) clientId);
+			ResultSet rset = pstmt.executeQuery();
+			if (rset.next()){
+				count = rset.getInt("nombre_voitures");
+			}
+			rset.close();
+			pstmt.close();
+			conn.close();
+		}catch (SQLException e){
+			throw new DaoException("Problème DAO");
+		}
+		return count;
+	}
+
+
 }

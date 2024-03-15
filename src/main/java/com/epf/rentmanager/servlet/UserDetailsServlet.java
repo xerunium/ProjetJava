@@ -3,6 +3,7 @@ package com.epf.rentmanager.servlet;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
+import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.model.Vehicle;
 import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
@@ -13,6 +14,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,6 +31,8 @@ public class UserDetailsServlet extends HttpServlet {
     private ClientService clientService;
     @Autowired
     private ReservationService reservationService;
+    @Autowired
+    private VehicleService vehicleService;
 
     @Override
     public void init() throws ServletException {
@@ -41,8 +45,26 @@ public class UserDetailsServlet extends HttpServlet {
             long client_id = Long.parseLong(request.getParameter("id"));
             Client client = clientService.findById(client_id);
             int countResa = reservationService.countByClientID(client_id);
+            int countVehicle = reservationService.countVehicleByClientID(client_id);
             request.setAttribute("countResa", countResa);
             request.setAttribute("client", client);
+            request.setAttribute("countvehicle", countVehicle);
+
+            List<Reservation> listRes = reservationService.findByClientId(client_id);
+            ArrayList<Vehicle> listVehicle = new ArrayList<>();
+            System.out.println(listRes);
+            if(!listRes.isEmpty()) {
+                for (Reservation r : listRes) {
+                    Vehicle vehicle = vehicleService.findById(r.getVehicule_id());
+                    r.setVehicleName(vehicle.getConstructeur() + " " + vehicle.getModele());
+                    if(!listVehicle.contains(vehicle)){
+                        listVehicle.add(vehicle);
+                    }
+                }
+            }
+            System.out.println(listVehicle);
+            request.setAttribute("vehicles", listVehicle);
+            request.setAttribute("reservations", listRes);
         } catch (ServiceException e) {
             e.getMessage();
         }

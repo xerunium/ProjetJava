@@ -52,10 +52,16 @@ public class ReservationService {
 
     public List<Reservation> findByClientId(long id) throws ServiceException {
         try {
+            System.out.println("service");
             List<Reservation> list = reservationDao.findResaByClientId(id);
-            for (Reservation c : list)
-                if (c == null)
+            System.out.println("sortieDAO");
+            for (Reservation c : list) {
+                System.out.println("entrée boucle");
+                if (c == null) {
+                    System.out.println("entrée null");
                     throw new ServiceException();
+                }
+            }
             return list;
         } catch (DaoException e) {
             e.getMessage();
@@ -114,6 +120,14 @@ public class ReservationService {
             e.getMessage();
         }
         return -1;
+    }
+
+    public int countVehicleByClientID(long clientid) throws ServiceException{
+        try {
+            return reservationDao.countVehicleByClientId(clientid);
+        } catch (DaoException e) {
+            throw new ServiceException();
+        }
     }
 
     public Reservation findById(long resId) throws ServiceException {

@@ -10,7 +10,8 @@ public class Reservation {
     private long vehicule_id;
     private LocalDate debut;
     private LocalDate fin;
-
+    private String vehicleName;
+    private String clientName;
     public Reservation(){}
 
     public Reservation(long client_id, long vehicule_id, LocalDate debut, LocalDate fin) {
@@ -71,14 +72,32 @@ public class Reservation {
         this.fin = fin;
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    public String getVehicleName() {
+        return vehicleName;
+    }
+
+    public void setVehicleName(String vehicleName) {
+        this.vehicleName = vehicleName;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    @Override
+    public String toString() {
         return "Reservation{" +
                 "id=" + id +
                 ", client_id=" + client_id +
                 ", vehicule_id=" + vehicule_id +
                 ", debut=" + debut +
                 ", fin=" + fin +
+                ", vehicleName='" + vehicleName + '\'' +
+                ", clientName='" + clientName + '\'' +
                 '}';
     }
 }

@@ -34,7 +34,9 @@
                                     <th>Naissance</th>
                                 </tr>
 
+
                                 <c:forEach items="${clients}" var="client">
+                                <tr>
                                     <td>${client.ID}.</td>
                                     <td>${client.nom}</td>
                                     <td>${client.prenom}</td>
