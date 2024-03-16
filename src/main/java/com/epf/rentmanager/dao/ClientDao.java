@@ -24,6 +24,8 @@ public class ClientDao {
 	private static final String FIND_CLIENT_QUERY = "SELECT nom, prenom, email, naissance FROM Client WHERE id=?;";
 	private static final String FIND_CLIENTS_QUERY = "SELECT id, nom, prenom, email, naissance FROM Client;";
 	private static final String COUNT_QUERY = "SELECT COUNT(*) AS count FROM Client;";
+	private static final String VERIFY_MAIL = "SELECT COUNT(*) AS email_exist FROM Client WHERE email = ?";
+
 	public long create(Client client) throws DaoException {
 		long id = client.getID();
 		String nom = client.getNom();
@@ -117,6 +119,23 @@ public class ClientDao {
 			throw new DaoException("Problème DAO");
 		}
 		return nb;
+	}
+
+	public boolean verifyMail(String email) throws DaoException{
+		int nb = 0;
+		try (
+				Connection conn = ConnectionManager.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(VERIFY_MAIL);)
+		{
+			pstmt.setString(1, email);
+			ResultSet rset = pstmt.executeQuery();
+			if (rset.next()){
+				nb = rset.getInt("email_exist");
+			}
+		}catch(SQLException e){
+			throw new DaoException("Problème DAO");
+		}
+		return nb>0;
 	}
 
 }

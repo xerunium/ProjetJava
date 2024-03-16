@@ -91,6 +91,28 @@
     $(function () {
         $('[data-mask]').inputmask()
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('.form-horizontal');
+        var beginInput = document.getElementById('begin');
+        var endInput = document.getElementById('end');
+
+        form.addEventListener('submit', function(event) {
+        var beginDate = new Date(beginInput.value);
+        var endDate = new Date(endInput.value);
+
+        // Calcul de la différence entre les dates en millisecondes
+        var difference = endDate - beginDate;
+        // Convertir la différence en jours
+        var differenceInDays = difference / (1000 * 60 * 60 * 24);
+
+        // Vérifier si la durée de réservation est supérieure à 7 jours
+        if (differenceInDays > 7) {
+        alert('La durée de réservation ne peut pas dépasser 7 jours.');
+        event.preventDefault(); // Empêche la soumission du formulaire
+        }
+        });
+    });
 </script>
 </body>
 </html>

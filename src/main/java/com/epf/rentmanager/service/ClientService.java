@@ -1,5 +1,7 @@
 package com.epf.rentmanager.service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +28,28 @@ public class ClientService {
 			if ((client.getNom() == null) || (client.getPrenom() == null)) {
 				throw new ServiceException();
 			}
+			LocalDate dateActuelle = LocalDate.now();
+
+			// Calcul de la période entre la date de naissance et la date actuelle
+			Period periode = Period.between(client.getNaissance(), dateActuelle);
+			// Récupération de l'âge en années
+			int age = periode.getYears();
+			if(age<18) {
+				System.out.println("Client n'a pas 18 ans");
+				throw new ServiceException();
+			}
 			client.setNom(client.getNom().toUpperCase());
-			clientDao.create(client);
+			if(!clientDao.verifyMail(client.getEmail())) {
+				System.out.println("mail ok");
+				clientDao.create(client);
+			}
+			else{
+				System.out.println("mail pas ok");
+				throw new ServiceException();
+			}
 		}
 		catch(DaoException e){
-			throw new DaoException();
+			throw new ServiceException();
 		}
 		return client.getID();
 	}

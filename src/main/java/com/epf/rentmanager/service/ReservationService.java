@@ -29,11 +29,14 @@ public class ReservationService {
     public long create(Reservation reservation) throws ServiceException, DaoException {
         try {
             if ((reservation.getClient_id()<1) || (reservation.getVehicule_id()<1)) {
-                throw new ServiceException("Problème DAO");
+                System.out.println("error 1");
+                throw new ServiceException("Problem Service");
             }
-            reservationDao.create(reservation);
+            if(!reservationDao.verifyDateResa(reservation)){
+                reservationDao.create(reservation);
+            }
         } catch (DaoException e) {
-            throw new DaoException();
+            throw new ServiceException();
         }
         return reservation.getId();
     }

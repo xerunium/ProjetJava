@@ -59,7 +59,7 @@
                                                 <td>${reservation.debut}</td>
                                                 <td>${reservation.fin}</td>
                                         <tr>
-                                        </c:forEach>>
+                                        </c:forEach>
                                     </table>
                                 </div>
                             </div>

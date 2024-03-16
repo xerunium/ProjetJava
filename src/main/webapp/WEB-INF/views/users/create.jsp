@@ -76,5 +76,22 @@
 <!-- ./wrapper -->
 
 <%@ include file="/WEB-INF/views/common/js_imports.jsp" %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('.form-horizontal');
+
+        form.addEventListener('submit', function(event) {
+            var lastNameInput = document.getElementById('last_name');
+            var firstNameInput = document.getElementById('first_name');
+
+            // Vérification si le nom et le prénom ont au moins 3 caractères
+            if (lastNameInput.value.length < 3 || firstNameInput.value.length < 3) {
+                alert('Le nom et le prénom doivent avoir au moins 3 caractères.');
+                event.preventDefault(); // Empêche la soumission du formulaire
+            }
+        });
+    });
+</script>
 </body>
 </html>

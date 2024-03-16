@@ -28,7 +28,8 @@ public class ReservationDao {
 	private static final String COUNT_QUERY = "SELECT COUNT(*) AS count FROM Reservation;";
 	private static final String COUNT_CLIENT_ID = "SELECT COUNT(*) AS count FROM Reservation WHERE client_id = ?";
 	private static final String COUNT_UNIQUE_VEHICLE = "SELECT COUNT(DISTINCT vehicle_id) AS nombre_voitures FROM Reservation WHERE client_id = ?;";
-
+	private static final String VERIFY_DATE_RESERVATION = "SELECT COUNT(*) AS nombre_de_reservations FROM Reservation WHERE vehicle_id = ? AND NOT (debut > ? OR fin < ?);";
+	private static final String VERIFY_30DAYS = "SELECT COUNT(*) AS nombre_de_reservations FROM (SELECT *, LEAD(debut) OVER (ORDER BY debut) AS prochain_debut FROM Reservation WHERE vehicle_id = ?) AS reservations WHERE DATEDIFF(prochain_debut, debut) >= 30;";
 	public long create(Reservation reservation) throws DaoException {
 		long id = reservation.getId();
 		long client_id = reservation.getClient_id(), vehicle_id = reservation.getVehicule_id();
@@ -193,6 +194,26 @@ public class ReservationDao {
 		}
 		return count;
 	}
+
+	public boolean verifyDateResa(Reservation reservation) throws DaoException{
+		int nb = 0;
+		try (
+				Connection conn = ConnectionManager.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(VERIFY_DATE_RESERVATION);)
+		{
+			pstmt.setInt(1, (int) reservation.getVehicule_id());
+			pstmt.setDate(2, Date.valueOf(reservation.getFin()));
+			pstmt.setDate(3, Date.valueOf(reservation.getDebut()));
+			ResultSet rset = pstmt.executeQuery();
+			if (rset.next()){
+				nb = rset.getInt("nombre_de_reservations");
+			}
+		}catch(SQLException e){
+			throw new DaoException("Problem DAO");
+		}
+		return nb>0;
+	}
+
 
 
 }
