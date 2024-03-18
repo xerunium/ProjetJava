@@ -39,7 +39,6 @@ public class VehicleService {
 		long id_vehicle = 0;
 		try {
 			id_vehicle = vehicleDao.delete(vehicle);
-			System.out.println("rentré dans service");
 		}
 		catch(DaoException e){
 			throw new ServiceException();
@@ -50,12 +49,9 @@ public class VehicleService {
 	public Vehicle findById(long id) throws ServiceException {
 		try{
 			Vehicle vehicle = vehicleDao.findById(id);
-			System.out.println("service");
 			if(vehicle!=null) {
-				System.out.println("pas null");
 				return vehicle;
 			}
-			System.out.println("service ex");
 			throw new ServiceException();
 		}catch(DaoException e){
 			e.getMessage();

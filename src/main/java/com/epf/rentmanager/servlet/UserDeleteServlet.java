@@ -40,11 +40,8 @@ public class UserDeleteServlet extends HttpServlet {
         try {
             long client_id = Long.parseLong(request.getParameter("id"));
             Client client = clientService.findById(client_id);
-            System.out.println(client);
             request.setAttribute("client", client);
-            System.out.println("ok");
             long ok = clientService.delete(client);
-            System.out.println(ok);
         } catch (ServiceException e) {
             e.getMessage();
         } catch (DaoException e) {

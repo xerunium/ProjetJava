@@ -64,14 +64,11 @@ public class VehicleDao {
 			PreparedStatement pstmt = conn.prepareStatement(FIND_VEHICLE_BY_ID_QUERY);)
 		{
 			pstmt.setInt(1,(int) id);
-			System.out.println("setInt");
 			ResultSet rset = pstmt.executeQuery();
 			if(rset.next()) {
-				System.out.println("rset.next");
 				constructeur = rset.getString(1);
 				modele = rset.getString(2);
 				nb = rset.getInt(3);
-				System.out.println(constructeur);
 				return new Vehicle(id, constructeur, modele, nb);
 			}
 		}catch(SQLException e){

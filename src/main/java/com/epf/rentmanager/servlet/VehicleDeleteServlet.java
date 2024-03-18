@@ -41,13 +41,9 @@ public class VehicleDeleteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             long vehicle_id = Long.parseLong(request.getParameter("id"));
-            System.out.println(vehicle_id);
             Vehicle vehicle = vehicleService.findById(vehicle_id);
-            System.out.println(vehicle);
             request.setAttribute("vehicle", vehicle);
-            System.out.println("ok");
             long ok = vehicleService.delete(vehicle);
-            System.out.println(ok);
         } catch (ServiceException e) {
             e.getMessage();
         } catch (DaoException e) {

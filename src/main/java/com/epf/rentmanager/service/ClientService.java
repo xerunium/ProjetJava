@@ -35,16 +35,13 @@ public class ClientService {
 			// Récupération de l'âge en années
 			int age = periode.getYears();
 			if(age<18) {
-				System.out.println("Client n'a pas 18 ans");
 				throw new ServiceException();
 			}
 			client.setNom(client.getNom().toUpperCase());
 			if(!clientDao.verifyMail(client.getEmail())) {
-				System.out.println("mail ok");
 				clientDao.create(client);
 			}
 			else{
-				System.out.println("mail pas ok");
 				throw new ServiceException();
 			}
 		}
@@ -58,7 +55,6 @@ public class ClientService {
 		long id_client = 0;
 		try {
 			id_client = clientDao.delete(client);
-			System.out.println("rentré dans service");
 		}
 		catch(DaoException e){
 			throw new ServiceException();

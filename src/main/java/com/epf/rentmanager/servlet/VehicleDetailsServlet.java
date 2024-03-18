@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/users/details")
-public class UserDetailsServlet extends HttpServlet {
+@WebServlet("/vehicles/details")
+public class VehicleDetailsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     @Autowired
@@ -43,34 +43,36 @@ public class UserDetailsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            long client_id = Long.parseLong(request.getParameter("id"));
-            Client client = clientService.findById(client_id);
-            int countResa = reservationService.countByClientID(client_id);
-            int countVehicle = reservationService.countVehicleByClientID(client_id);
+            long vehicle_id = Long.parseLong(request.getParameter("id"));
+            Vehicle vehicle = vehicleService.findById(vehicle_id);
+            int countResa = reservationService.countByVehicleID(vehicle_id);
+            int countClient = reservationService.countClientByVehicleID(vehicle_id);
             request.setAttribute("countResa", countResa);
-            request.setAttribute("client", client);
-            request.setAttribute("countvehicle", countVehicle);
+            request.setAttribute("vehicle", vehicle);
+            request.setAttribute("countclient", countClient);
 
-            List<Reservation> listRes = reservationService.findByClientId(client_id);
-            ArrayList<Vehicle> listVehicle = new ArrayList<>();
+            List<Reservation> listRes = reservationService.findByVehicleId(vehicle_id);
+            ArrayList<Client> listClient = new ArrayList<>();
             if(!listRes.isEmpty()) {
                 for (Reservation r : listRes) {
-                    Vehicle vehicle = vehicleService.findById(r.getVehicule_id());
-                    r.setVehicleName(vehicle.getConstructeur() + " " + vehicle.getModele());
-                    Optional<Vehicle> clientTrouve = listVehicle.stream()
-                            .filter(v -> v.getId() == vehicle.getId())
+                    Client client = clientService.findById(r.getClient_id());
+                    r.setClientName(client.getPrenom() + " " + client.getNom());
+                    Optional<Client> clientTrouve = listClient.stream()
+                            .filter(c -> c.getID() == client.getID())
                             .findFirst();
 
                     if (!clientTrouve.isPresent()) {
-                        listVehicle.add(vehicle);
+                        System.out.println("Le client n'est pas present");
+                        listClient.add(client);
                     }
                 }
             }
-            request.setAttribute("vehicles", listVehicle);
+            request.setAttribute("clients", listClient);
             request.setAttribute("reservations", listRes);
+
         } catch (ServiceException e) {
             e.getMessage();
         }
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/users/details.jsp").forward(request, response);
+        this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/details.jsp").forward(request, response);
     }
 }

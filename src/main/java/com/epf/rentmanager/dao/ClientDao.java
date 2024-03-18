@@ -50,14 +50,10 @@ public class ClientDao {
 	
 	public long delete(Client client) throws DaoException {
 		long id = client.getID();
-		System.out.println("id du client DAO : " + id);
 		try (Connection conn = ConnectionManager.getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(DELETE_CLIENT_QUERY)) {
-			System.out.println("rentré dans catch");
 			pstmt.setInt(1, (int) id);
-			System.out.println("setint");
 			pstmt.execute();
-			System.out.println("ici");
 			return id;
 		} catch (SQLException e) {
 			throw new DaoException("Probleme dans la suppression DAO");

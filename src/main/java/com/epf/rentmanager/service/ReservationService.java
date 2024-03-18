@@ -29,7 +29,6 @@ public class ReservationService {
     public long create(Reservation reservation) throws ServiceException, DaoException {
         try {
             if ((reservation.getClient_id()<1) || (reservation.getVehicule_id()<1)) {
-                System.out.println("error 1");
                 throw new ServiceException("Problem Service");
             }
             if(!reservationDao.verifyDateResa(reservation)){
@@ -45,7 +44,6 @@ public class ReservationService {
         long id_client = 0;
         try {
             id_client = reservationDao.delete(reservation);
-            System.out.println("rentré dans service");
         }
         catch(DaoException e){
             throw new ServiceException();
@@ -55,13 +53,9 @@ public class ReservationService {
 
     public List<Reservation> findByClientId(long id) throws ServiceException {
         try {
-            System.out.println("service");
             List<Reservation> list = reservationDao.findResaByClientId(id);
-            System.out.println("sortieDAO");
             for (Reservation c : list) {
-                System.out.println("entrée boucle");
                 if (c == null) {
-                    System.out.println("entrée null");
                     throw new ServiceException();
                 }
             }
@@ -77,8 +71,9 @@ public class ReservationService {
         try {
             List<Reservation> list = reservationDao.findResaByVehicleId(id);
             for (Reservation c : list)
-                if (c == null)
+                if (c == null) {
                     throw new ServiceException();
+                }
             return list;
         } catch (DaoException e) {
             e.getMessage();
@@ -136,16 +131,30 @@ public class ReservationService {
     public Reservation findById(long resId) throws ServiceException {
         try{
             Reservation reservation = reservationDao.findByID(resId);
-            System.out.println("service");
             if(reservation!=null) {
-                System.out.println("pas null");
                 return reservation;
             }
-            System.out.println("service ex");
             throw new ServiceException();
         }catch(DaoException e){
             e.getMessage();
         }
         return null;
+    }
+
+    public int countByVehicleID(long vehicleId){
+        try {
+            return reservationDao.countResaByVehicleId(vehicleId);
+        } catch (DaoException e) {
+            e.getMessage();
+        }
+        return -1;
+    }
+
+    public int countClientByVehicleID(long vehicleID) throws ServiceException{
+        try {
+            return reservationDao.countClientByVehicleId(vehicleID);
+        } catch (DaoException e) {
+            throw new ServiceException();
+        }
     }
 }

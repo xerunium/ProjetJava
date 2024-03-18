@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/users/details")
-public class UserDetailsServlet extends HttpServlet {
+@WebServlet("/rents/details")
+public class ReservationDetailsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     @Autowired
@@ -43,14 +43,10 @@ public class UserDetailsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            long client_id = Long.parseLong(request.getParameter("id"));
-            Client client = clientService.findById(client_id);
-            int countResa = reservationService.countByClientID(client_id);
-            int countVehicle = reservationService.countVehicleByClientID(client_id);
-            request.setAttribute("countResa", countResa);
-            request.setAttribute("client", client);
-            request.setAttribute("countvehicle", countVehicle);
-
+            long rent_id = Long.parseLong(request.getParameter("id"));
+            Reservation reservation = reservationService.findById(rent_id);
+            request.setAttribute("rent", reservation);
+            /*
             List<Reservation> listRes = reservationService.findByClientId(client_id);
             ArrayList<Vehicle> listVehicle = new ArrayList<>();
             if(!listRes.isEmpty()) {
@@ -68,9 +64,11 @@ public class UserDetailsServlet extends HttpServlet {
             }
             request.setAttribute("vehicles", listVehicle);
             request.setAttribute("reservations", listRes);
+
+            */
         } catch (ServiceException e) {
             e.getMessage();
         }
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/users/details.jsp").forward(request, response);
+        this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/details.jsp").forward(request, response);
     }
 }

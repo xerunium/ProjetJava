@@ -39,11 +39,8 @@ public class ReservationDeleteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             long res_id = Long.parseLong(request.getParameter("id"));
-            System.out.println(res_id);
             Reservation reservation = reservationService.findById(res_id);
-            System.out.println(reservation);
             request.setAttribute("reservation", reservation);
-            System.out.println("ok");
             long ok = reservationService.delete(reservation);
             System.out.println(ok);
         } catch (ServiceException e) {
