@@ -1,5 +1,6 @@
 package com.epf.rentmanager.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.epf.rentmanager.dao.ReservationDao;
@@ -26,18 +27,27 @@ public class ReservationService {
     }
 
 
-    public long create(Reservation reservation) throws ServiceException, DaoException {
+    public long create(Reservation reservation) throws ServiceException {
         try {
+            LocalDate debut = reservation.getDebut();
+            LocalDate fin = reservation.getFin();
+            if (debut.plusDays(7).isBefore(fin)) {
+                throw new ServiceException("Une reservation ne peut pas durer plus de 7 jours");
+            }
+            if (fin.isBefore(debut)) {
+                throw new ServiceException("Le début ne peut pas être après la fin");
+            }
             if ((reservation.getClient_id()<1) || (reservation.getVehicule_id()<1)) {
                 throw new ServiceException("Problem Service");
             }
-            if(!reservationDao.verifyDateResa(reservation)){
+            if(!reservationDao.verifyDateResa(reservation) && !reservationDao.verifierReservationConsecutives(reservation)){
                 reservationDao.create(reservation);
+                return reservation.getId();
             }
         } catch (DaoException e) {
-            throw new ServiceException();
+            throw new ServiceException(e.getMessage());
         }
-        return reservation.getId();
+        return 0;
     }
 
     public long delete(Reservation reservation) throws ServiceException, DaoException{
@@ -46,7 +56,7 @@ public class ReservationService {
             id_client = reservationDao.delete(reservation);
         }
         catch(DaoException e){
-            throw new ServiceException();
+            throw new ServiceException(e.getMessage());
         }
         return id_client;
     }
@@ -54,107 +64,83 @@ public class ReservationService {
     public List<Reservation> findByClientId(long id) throws ServiceException {
         try {
             List<Reservation> list = reservationDao.findResaByClientId(id);
-            for (Reservation c : list) {
-                if (c == null) {
-                    throw new ServiceException();
-                }
-            }
             return list;
         } catch (DaoException e) {
-            e.getMessage();
+            throw new ServiceException(e.getMessage());
         }
-        return null;
-
     }
 
     public List<Reservation> findByVehicleId(long id) throws ServiceException {
         try {
             List<Reservation> list = reservationDao.findResaByVehicleId(id);
-            for (Reservation c : list)
-                if (c == null) {
-                    throw new ServiceException();
-                }
             return list;
         } catch (DaoException e) {
-            e.getMessage();
+            throw new ServiceException(e.getMessage());
         }
-        return null;
     }
 
     public List<Reservation> findAll() throws ServiceException {
         try {
-            List<Reservation> list = reservationDao.findAll();
-            for (Reservation c : list)
-                if (c == null)
-                    throw new ServiceException();
-            return list;
+            return reservationDao.findAll();
         } catch (DaoException e) {
-            e.getMessage();
+            throw new ServiceException("Erreur lors de la recherche des réservations.");
         }
-        return null;
     }
 
-    public void delete(long id){
+    public void delete(long id) throws ServiceException {
         try {
              reservationDao.delete(reservationDao.findByID(id));
         } catch (DaoException e) {
-            e.getMessage();
+            throw new ServiceException(e.getMessage());
         }
     }
 
-    public int count(){
+    public int count() throws ServiceException {
         try{
             return reservationDao.count();
         } catch (DaoException e) {
-            e.getMessage();
-            return 0;
+            throw new ServiceException(e.getMessage());
         }
     }
 
-    public int countByClientID(long clientid){
+    public int countByClientID(long clientid) throws ServiceException {
         try {
             return reservationDao.countResaByClientId(clientid);
         } catch (DaoException e) {
-            e.getMessage();
+            throw new ServiceException(e.getMessage());
         }
-        return -1;
     }
 
     public int countVehicleByClientID(long clientid) throws ServiceException{
         try {
             return reservationDao.countVehicleByClientId(clientid);
         } catch (DaoException e) {
-            throw new ServiceException();
+            throw new ServiceException(e.getMessage());
         }
     }
 
     public Reservation findById(long resId) throws ServiceException {
         try{
             Reservation reservation = reservationDao.findByID(resId);
-            if(reservation!=null) {
-                return reservation;
-            }
-            throw new ServiceException();
+            return reservation;
         }catch(DaoException e){
-            e.getMessage();
+            throw new ServiceException(e.getMessage());
         }
-        return null;
     }
 
-    public int countByVehicleID(long vehicleId){
+    public int countByVehicleID(long vehicleId) throws ServiceException {
         try {
             return reservationDao.countResaByVehicleId(vehicleId);
         } catch (DaoException e) {
-            e.getMessage();
+            throw new ServiceException(e.getMessage());
         }
-        return -1;
     }
 
     public int countClientByVehicleID(long vehicleID) throws ServiceException{
         try {
             return reservationDao.countClientByVehicleId(vehicleID);
         } catch (DaoException e) {
-            throw new ServiceException();
+            throw new ServiceException(e.getMessage());
         }
     }
 }

@@ -25,8 +25,11 @@ public class ClientService {
 
 	public long create(Client client) throws ServiceException, DaoException {
 		try {
+			if (client.getNom().length() < 3 || client.getPrenom().length() < 3) {
+				throw new ServiceException("Erreur Service");
+			}
 			if ((client.getNom() == null) || (client.getPrenom() == null)) {
-				throw new ServiceException();
+				throw new ServiceException("Erreur Service");
 			}
 			LocalDate dateActuelle = LocalDate.now();
 
@@ -35,18 +38,18 @@ public class ClientService {
 			// Récupération de l'âge en années
 			int age = periode.getYears();
 			if(age<18) {
-				throw new ServiceException();
+				throw new ServiceException("erreur Service");
 			}
 			client.setNom(client.getNom().toUpperCase());
 			if(!clientDao.verifyMail(client.getEmail())) {
 				clientDao.create(client);
 			}
 			else{
-				throw new ServiceException();
+				throw new ServiceException("Erreur Service");
 			}
 		}
 		catch(DaoException e){
-			throw new ServiceException();
+			throw new ServiceException(e.getMessage());
 		}
 		return client.getID();
 	}
@@ -57,7 +60,7 @@ public class ClientService {
 			id_client = clientDao.delete(client);
 		}
 		catch(DaoException e){
-			throw new ServiceException();
+			throw new ServiceException(e.getMessage());
 		}
 		return id_client;
 	}
@@ -67,32 +70,30 @@ public class ClientService {
 			Client client = clientDao.findById(id);
 			if(client !=null)
 				return client;
-			throw new ServiceException();
+			throw new ServiceException("Erreur Service");
+
 		}catch(DaoException e){
-			e.getMessage();
+			throw new ServiceException("Erreur Service");
 		}
-		return null;
 	}
 
 	public List<Client> findAll() throws ServiceException {
-		try{
+		try {
 			List<Client> list = clientDao.findAll();
 			for (Client c : list)
-				if(c ==null)
-					throw new ServiceException();
+				if (c == null)
+					throw new ServiceException("Erreur Service");
 			return list;
-		}catch(DaoException e){
-			e.getMessage();
+		} catch (DaoException e) {
+			throw new ServiceException("Erreur Service");
 		}
-		return null;
 	}
 
-	public int count(){
+	public int count() throws ServiceException {
 		try{
 			return clientDao.count();
 		} catch (DaoException e) {
-			e.getMessage();
-			return 0;
+			throw new ServiceException(e.getMessage());
 		}
 	}
 }

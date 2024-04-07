@@ -43,9 +43,6 @@
                                         <a class="btn btn-primary" href="${pageContext.request.contextPath}/vehicles/details?id=${vehicle.id}">
                                             <i class="fa fa-play"></i>
                                         </a>
-                                        <a class="btn btn-success " href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
                                         <a class="btn btn-danger " href="${pageContext.request.contextPath}/vehicles/delete?id=${vehicle.id}">
                                             <i class="fa fa-trash"></i>
                                         </a>

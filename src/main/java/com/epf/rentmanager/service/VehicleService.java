@@ -24,15 +24,20 @@ public class VehicleService {
 
 	public long create(Vehicle vehicle) throws ServiceException, DaoException {
 		try {
-			if ((vehicle.getConstructeur() == null) || (vehicle.getNb_places()<= 1)) {
-				throw new ServiceException();
+			if (vehicle.getConstructeur().isEmpty()) {
+				throw new ServiceException("Le véhicule doit avoir un constructeur.");
 			}
-			vehicleDao.create(vehicle);
+			if (vehicle.getModele().isEmpty()) {
+				throw new ServiceException("Le véhicule doit avoir un model.");
+			}
+			if ((vehicle.getNb_places() < 2) || (vehicle.getNb_places() > 9)) {
+				throw new ServiceException("Erreur de service");
+			}
+			return vehicleDao.create(vehicle);
 		}
 		catch(DaoException e){
-			throw new DaoException();
+			throw new ServiceException(e.getMessage());
 		}
-		return vehicle.getId();
 	}
 
 	public long delete(Vehicle vehicle) throws ServiceException, DaoException{
@@ -41,7 +46,7 @@ public class VehicleService {
 			id_vehicle = vehicleDao.delete(vehicle);
 		}
 		catch(DaoException e){
-			throw new ServiceException();
+			throw new ServiceException(e.getMessage());
 		}
 		return id_vehicle;
 	}
@@ -52,11 +57,11 @@ public class VehicleService {
 			if(vehicle!=null) {
 				return vehicle;
 			}
-			throw new ServiceException();
+			throw new ServiceException("Erreur de service");
 		}catch(DaoException e){
-			e.getMessage();
+			throw new ServiceException(e.getMessage());
 		}
-		return null;
+
 	}
 
 	public List<Vehicle> findAll() throws ServiceException {
@@ -64,21 +69,18 @@ public class VehicleService {
 			List<Vehicle> list = vehicleDao.findAll();
 			for (Vehicle c : list)
 				if(c ==null)
-					throw new ServiceException();
+					throw new ServiceException("Erreur de service");
 			return list;
 		}catch(DaoException e){
-			e.getMessage();
+			throw new ServiceException(e.getMessage());
 		}
-		return null;
-		
 	}
 
-	public int count(){
+	public int count() throws ServiceException {
 		try{
 			return vehicleDao.count();
 		} catch (DaoException e) {
-            e.getMessage();
-			return 0;
+			throw new ServiceException(e.getMessage());
         }
     }
 	

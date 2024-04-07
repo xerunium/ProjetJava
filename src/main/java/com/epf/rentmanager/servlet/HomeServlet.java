@@ -1,5 +1,6 @@
 package com.epf.rentmanager.servlet;
 
+import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
@@ -39,11 +40,26 @@ public class HomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		int count = vehicleService.count();
-		int countU = clientService.count();
-		int countR = reservationService.count();
+        int count = 0;
+        try {
+            count = vehicleService.count();
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
+        int countU = 0;
+        try {
+            countU = clientService.count();
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
+        int countR = 0;
+        try {
+            countR = reservationService.count();
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
 
-		request.setAttribute("count", count);
+        request.setAttribute("count", count);
 		request.setAttribute("countU", countU);
 		request.setAttribute("countR", countR);
 

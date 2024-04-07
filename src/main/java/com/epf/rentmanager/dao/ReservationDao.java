@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +117,7 @@ public class ReservationDao {
 			pstmt.close();
 			conn.close();
 		}catch (SQLException e){
-			throw new DaoException("Problème DAO");
+			throw new DaoException("Problème DAO", e);
 		}
 		return list;
 	}
@@ -205,11 +206,73 @@ public class ReservationDao {
 			if (rset.next()){
 				nb = rset.getInt("nombre_de_reservations");
 			}
+			rset.close();
 		}catch(SQLException e){
 			throw new DaoException("Problem DAO");
 		}
 		return nb>0;
 	}
+
+	public boolean verifierReservationConsecutives(Reservation reservation) throws DaoException {
+		long nombreDeJours = ChronoUnit.DAYS.between(reservation.getDebut(), reservation.getFin())+1;
+		System.out.println("nbjours initial : " + nombreDeJours);
+		long id = reservation.getId();
+		long vehicleId = reservation.getVehicule_id();
+		LocalDate debut = reservation.getDebut();
+		LocalDate fin = reservation.getFin();
+
+		String jour_apres = "SELECT id, debut, fin FROM Reservation WHERE debut = ? AND vehicle_id = ?";
+		String jour_avant = "SELECT id, debut, fin FROM Reservation WHERE fin = ? AND vehicle_id = ?";
+
+		try (Connection conn = ConnectionManager.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(jour_apres);
+			 PreparedStatement pstmt2 = conn.prepareStatement(jour_avant)) {
+
+			do {
+				pstmt.setDate(1, Date.valueOf(fin.plusDays(1)));
+				pstmt.setInt(2, (int) vehicleId);
+				ResultSet rset = pstmt.executeQuery();
+
+				if (rset.next()) {
+					System.out.println("trouvé après");
+					id = rset.getLong(1);
+					System.out.println("id trouvé : " + id);
+					fin = rset.getDate(3).toLocalDate();
+					nombreDeJours += ChronoUnit.DAYS.between(rset.getDate(2).toLocalDate(), fin)+1;
+					System.out.println("nbjours : " + nombreDeJours);
+				} else {
+					break;
+				}
+			} while (nombreDeJours < 30 && fin != null);
+
+			if (nombreDeJours >= 30) {
+				return true;
+			}
+
+			do {
+				pstmt2.setDate(1, Date.valueOf(debut.minusDays(1)));
+				pstmt2.setInt(2, (int) vehicleId);
+				ResultSet rset = pstmt2.executeQuery();
+
+				if (rset.next()) {
+					System.out.println("trouvé avant");
+					id = rset.getLong(1);
+					System.out.println("id trouvé : " + id);
+					debut = rset.getDate(2).toLocalDate();
+					nombreDeJours += ChronoUnit.DAYS.between(debut, rset.getDate(3).toLocalDate())+1;
+					System.out.println("nbjours : " + nombreDeJours);
+				} else {
+					break;
+				}
+			} while (nombreDeJours < 30 && debut != null);
+
+			return nombreDeJours >= 30;
+		} catch (SQLException e) {
+			System.out.println("erreur dao : " + e);
+			throw new DaoException("Erreur DAO");
+		}
+	}
+
 
 	public int countResaByVehicleId(long vehicleId) throws DaoException {
 		int count = -1;

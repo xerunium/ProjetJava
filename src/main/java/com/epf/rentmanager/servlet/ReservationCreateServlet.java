@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -54,16 +55,16 @@ public class ReservationCreateServlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
+        String message = null;
+        String messageType;
         try {
             int voiture = Integer.parseInt(req.getParameter("car"));
             int client = Integer.parseInt(req.getParameter("client"));
             LocalDate begin = LocalDate.parse(req.getParameter("begin"));
             LocalDate end = LocalDate.parse(req.getParameter("end"));
-            reservationService.create(new Reservation(client, voiture, begin, end));
+            long val = reservationService.create(new Reservation(client, voiture, begin, end));
         } catch (ServiceException e) {
-            e.getMessage();
-        } catch (DaoException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 }

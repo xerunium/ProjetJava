@@ -27,14 +27,16 @@ public class ReservationCli {
             reservationService.create(new Reservation(id_client, id_vehicle, debut, fin));
         } catch (ServiceException e) {
             e.getMessage();
-        } catch (DaoException e) {
-            e.getMessage();
         }
     }
 
     public void deleteReservation(){
         long id_res = IOUtils.readInt("Entrez l'ID reservation :");
-        reservationService.delete(id_res);
+        try {
+            reservationService.delete(id_res);
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void findAll(){

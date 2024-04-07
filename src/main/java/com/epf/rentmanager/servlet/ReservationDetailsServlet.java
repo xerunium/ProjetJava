@@ -45,6 +45,10 @@ public class ReservationDetailsServlet extends HttpServlet {
         try {
             long rent_id = Long.parseLong(request.getParameter("id"));
             Reservation reservation = reservationService.findById(rent_id);
+            Client client = clientService.findById(reservation.getClient_id());
+            reservation.setClientName(client.getPrenom() + " " + client.getNom());
+            Vehicle vehicle = vehicleService.findById(reservation.getVehicule_id());
+            reservation.setVehicleName(vehicle.getConstructeur() + " " + vehicle.getModele());
             request.setAttribute("rent", reservation);
             /*
             List<Reservation> listRes = reservationService.findByClientId(client_id);

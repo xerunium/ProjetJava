@@ -29,6 +29,12 @@
                                 <li class="list-group-item">
                                     <b>Fin</b> <a class="pull-right">${rent.fin}</a>
                                 </li>
+                                <li class="list-group-item">
+                                    <b> Nom du Client</b> <a class="pull-right">${rent.clientName}</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Voiture</b> <a class="pull-right">${rent.vehicleName}</a>
+                                </li>
                             </ul>
                         </div>
                         <!-- /.box-body -->
@@ -36,61 +42,6 @@
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
-                <div class="col-md-9">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#rents" data-toggle="tab">Client</a></li>
-                            <li><a href="#cars" data-toggle="tab">Voiture</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="active tab-pane" id="rents">
-                                <div class="box-body no-padding">
-                                    <table class="table table-striped">
-                                        <tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Voiture</th>
-                                            <th>Date de debut</th>
-                                            <th>Date de fin</th>
-                                        </tr>
-                                        <c:forEach items="${reservations}" var="reservation">
-                                        <tr>
-                                            <td>${reservation.id}</td>
-                                            <td>${reservation.vehicleName}</td>
-                                            <td>${reservation.debut}</td>
-                                            <td>${reservation.fin}</td>
-                                        <tr>
-                                            </c:forEach>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                            <div class="tab-pane" id="cars">
-                                <!-- /.box-header -->
-                                <div class="box-body no-padding">
-                                    <table class="table table-striped">
-                                        <tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Modele</th>
-                                            <th>Constructeur</th>
-                                            <th style=>Nombre de places</th>
-                                        </tr>
-                                        <c:forEach items="${vehicles}" var="vehicle">
-                                        <tr>
-                                            <td>${vehicle.id}</td>
-                                            <td>${vehicle.modele}</td>
-                                            <td>${vehicle.constructeur}</td>
-                                            <td>${vehicle.nb_places}</td>
-                                        <tr>
-                                            </c:forEach>>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                        </div>
-                        <!-- /.tab-content -->
-                    </div>
-                    <!-- /.nav-tabs-custom -->
-                </div>
                 <!-- /.col -->
             </div>
             <!-- /.row -->

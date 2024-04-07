@@ -2,6 +2,7 @@ package com.epf.rentmanager.model;
 
 import java.time.LocalDate;
 
+
 public class Client {
     private static int nextID = 1; // Initialise le premier ID à 1
     private long ID;
@@ -26,12 +27,10 @@ public class Client {
     }
 
     public Client(String nom, String prenom, String mail, LocalDate naissance){
-        this.ID = nextID;
         this.nom = nom;
         this.prenom = prenom;
         this.email = mail;
         this.naissance = naissance;
-        nextID++;
     }
 
     public Client(long ID, String nom, String prenom, String email, LocalDate naissance) {
